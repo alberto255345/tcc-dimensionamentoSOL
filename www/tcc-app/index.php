@@ -29,9 +29,9 @@
 
             <div class="card miid shadow-lg"> Informe o endereço:
                 <form id="form" style="display: grid;">
-                    <input type="text" name="endereco" id="campo-busca">
-                    <input type="hidden" id="subject_name">
-                    <input type="hidden" id="subject_code">
+                    <input type="text" name="endereco-valor" id="campo-busca">
+                    <input type="hidden" name="endereco" id="subject_name">
+                    <input type="hidden" name="latlog" id="subject_code">
                 </form>
             </div>
 
@@ -40,7 +40,7 @@
 
             <div class="card miid shadow-lg"> Metodo de dimensionamento:
                 <form id="form" style="display: grid;">
-                    <select id="select1">
+                    <select id="select1" name="metodo">
                         <option disabled selected value=""></option>
                         <option value="1">Potência Instalada</option>
                         <option value="2">Consumo Mensal</option>
@@ -53,7 +53,7 @@
 
             <div class="card miid shadow-lg"> Informe o valor da <span id="saida1" style="display: contents;"></span>:
                 <form id="form" style="display: grid;">
-                    <input type="text" name="valor-kwh" id="campo-kwh">
+                    <input type="text" name="metodovalor" id="campo-kwh">
                 </form>
             </div>
 
@@ -62,7 +62,7 @@
 
             <div class="card miid shadow-lg"> Qual o padrão de fornecimento de energia:
                 <form id="form" style="display: grid;">
-                    <select id="select2">
+                    <select id="select2" name="padrao">
                         <option disabled selected value=""></option>
                         <option value="1">Monofásico</option>
                         <option value="2">Bifásico</option>
@@ -76,7 +76,7 @@
 
             <div class="card miid shadow-lg"> Qual o grupo de cliente:
                 <form id="form" style="display: grid;">
-                    <select id="select3">
+                    <select id="select3" name="grupo">
                         <option disabled selected value=""></option>
                         <option value="1">Grupo A</option>
                         <option value="2">Grupo B</option>
@@ -89,7 +89,7 @@
 
             <div class="card miid shadow-lg"> Qual tipo de inversor:
                 <form id="form" style="display: grid;">
-                    <select id="select4">
+                    <select id="select4" name="tipo">
                         <option disabled selected value=""></option>
                         <option value="1">Inversor com Strings</option>
                         <option value="2">Micro-Inversor</option>
@@ -102,11 +102,7 @@
 
             <div class="card miid shadow-lg"> Quantos metros quadrados tem o telhado<br> ou a area de instalação:
                 <form id="form" style="display: grid;">
-                    <select id="select4">
-                        <option disabled selected value=""></option>
-                        <option value="1">Inversor com Strings</option>
-                        <option value="2">Micro-Inversor</option>
-                    </select>
+                    <input type="number" name="metros" id="metros-q">
                 </form>
             </div>
 
@@ -114,7 +110,7 @@
         <div stage="7">
 
             <div class="card miid shadow-lg"> 
-            <button type="button" class="btn btn-primary">Gerar Projeto Solar</button>
+            <button type="button" class="btn btn-primary" id="make-projet">Gerar Projeto Solar</button>
             </div>
 
         </div>

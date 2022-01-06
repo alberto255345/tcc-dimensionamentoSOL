@@ -18,9 +18,45 @@ $(document).ready(function(){
       $("button[data-controls='prev']").html('<i class="fas fa-chevron-left"></i>');
       $("button[data-controls='next']").css({'position':'absolute','right':'0','z-index':'15','top':'50%'});
       $("button[data-controls='next']").html('<i class="fas fa-chevron-right"></i>');
+    //   $("button[data-controls='next']").unbind("click");
 
     var bootstrapButton = $.fn.button.noConflict(); // return $.fn.button to previously assigned value
     $.fn.bootstrapBtn = bootstrapButton;
+    
+    var opcFormList = ['subject_name','select1','campo-kwh', 'select2', 'select3', 'select4', 'metros-q'],
+        optionsElements = {};
+    
+    var doc = document;
+    slider.getInfo().nextButton.disabled = true;
+    
+    opcFormList.forEach(function(item) {
+          var el = doc.getElementById(item);
+    
+          if (el && el.nodeName) {
+            optionsElements[item] = el;
+          }
+    });
+    
+    opcFormList.forEach(function(item) {
+        $(optionsElements[item]).on("change input focus",function(){
+            console.log(item + ":" + $(optionsElements[item]).val());
+            if ($(optionsElements[item]).val() == "" || $(optionsElements[item]).val() == undefined) {
+                slider.getInfo().nextButton.disabled = true;
+            }else{
+                slider.getInfo().nextButton.disabled = false;
+            }
+        })    
+    });
+
+    $("#campo-busca").change(function(){
+        if ($(this).val() == "") {
+            $("#subject_name").val("").trigger('change');
+        }
+    });
+
+    slider.events.on('transitionEnd', function (info, eventName) {          
+            $(optionsElements[opcFormList[info.index]]).focus().trigger('focus');
+    });
 
     $("#select1").change(function(){
         if (this.value == 1) {
@@ -67,15 +103,14 @@ $('#campo-busca').autocomplete({
     select: function(event, ui) {
         if (ui.item.label == "Subject not found") {
     
-          $("#subject_name").val('');
-          $("#subject_code").val('');
+          $("#subject_name").val('').trigger('change');
+          $("#subject_code").val('').trigger('change');
           event.preventDefault();
           return false;
         }
-        console.log( "Selected: " + ui.item.label + " aka " + ui.item.value);
-        $("#subject_name").val(ui.item.street);
-        $("#subject_code").val(ui.item.latitude + ', ' + ui.item.longitude);
-        $('#campo-busca').val(ui.item.label);
+        $("#subject_name").val(ui.item.label).trigger('change');
+        $("#subject_code").val(ui.item.latitude + ', ' + ui.item.longitude).trigger('change');
+        $('#campo-busca').val(ui.item.label).trigger('change');
         return false;
       }
 });
@@ -102,4 +137,8 @@ $('#campo-busca').autocomplete({
 //     });
 // });
 
+$('#make-projet').click(function (event) {
+    var resultado = $('form').serializeArray();
+        // event.preventDefault();
+});
 
