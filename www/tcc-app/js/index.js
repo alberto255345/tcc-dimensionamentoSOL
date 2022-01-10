@@ -136,9 +136,20 @@ $('#campo-busca').autocomplete({
 //     top: baseOffset.top - topOffset
 //     });
 // });
+function add(variavel) {
+    var arrayOfStrings = variavel[2]['value'].split(',');
+    variavel[2] = { name : 'lat', value : arrayOfStrings[0].trim()};
+    variavel.push({ name : 'lon', value : arrayOfStrings[1].trim()});
+    saida = [];
+    variavel.forEach(function(item) {
+        var nom = item['name'];
+        saida.push({ [nom] : item['value']});
+    });
+    return saida;
+}
 
 $('#make-projet').click(function (event) {
-    var resultado = $('form').serializeArray();
-        // event.preventDefault();
+    var resultado = add($('form').serializeArray());
+    $.redirect("./chart/index.php", resultado, "POST");
 });
 

@@ -53,7 +53,7 @@
 
             <div class="card miid shadow-lg"> Informe o valor da <span id="saida1" style="display: contents;"></span>:
                 <form id="form" style="display: grid;">
-                    <input type="text" name="metodovalor" id="campo-kwh">
+                    <input type="text" name="dim" id="campo-kwh">
                 </form>
             </div>
 
@@ -123,6 +123,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" integrity="sha512-Tn2m0TIpgVyTzzvmxLNuqbSJH3JP8jm+Cy3hvHrW7ndTDcJ1w5mBiksqDBb8GpE2ksktFvDB/ykZ0mDpsZj20w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.2/min/tiny-slider.js"></script>
+    <script src="node_modules/jquery.redirect/jquery.redirect.js"></script>
     <script src="./js/index.js"></script>
 </body>
 

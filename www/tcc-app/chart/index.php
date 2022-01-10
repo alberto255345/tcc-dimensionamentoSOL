@@ -2,15 +2,13 @@
 
 $raiz = $_SERVER['DOCUMENT_ROOT'];
 require_once $raiz . '/tcc-app/connect.php';
-
+$saida_n = '';
 $contem = 0;
 
-if (!empty($_GET['lat']) && isset($_GET['lat'])) {
-    if (!empty($_GET['lon']) && isset($_GET['lon'])) {
-      if (!empty($_GET['dim']) && isset($_GET['dim'])) {
-        $LON = $_GET['lon'];
-        $LAT = $_GET['lat'];
-        $DIM = $_GET['dim'];
+if (!empty($_POST[2]) && isset($_POST[2])) {
+    if (!empty($_POST[9]) && isset($_POST[9])) {
+        $LON = $_POST[9];
+        $LAT = $_POST[2];
 
         $stmt = $conn->prepare('SELECT ID, LAT, LON, ANUAL/1000 as ANUAL, round( SQRT(
             POW(69.1 * (LAT - (:lat)), 2) +
@@ -18,14 +16,11 @@ if (!empty($_GET['lat']) && isset($_GET['lat'])) {
         FROM solar HAVING distance < 5 ORDER BY distance
         LIMIT 1;');
 
-        $stmt->execute([ 'lat' => $LAT, 'lon' => $LON ]);
-
+        $stmt->execute([ 'lat' => $LAT['lat'], 'lon' => $LON['lon'] ]);
         $contem = 1;
-        
-      }
     } 
 } else {
-    echo "No, mail is not set";
+    echo "No Data";
 }
 ?>
 <!DOCTYPE html>
@@ -49,26 +44,26 @@ if (!empty($_GET['lat']) && isset($_GET['lat'])) {
 	<tbody>
 	<tr>
 		<td>&nbsp;Endereço:</td>
-		<td>&nbsp;<?php echo $_GET['endereco'];?></td>
+		<td>&nbsp;<?php echo $_POST[1]['endereco'];?></td>
 		<td>&nbsp;<?php 
-    if($_GET['metodo'] == 1){ 
+    if($_POST[3]['metodo'] == 1){ 
       echo 'Potencia Instalada';
-    }elseif ($_GET['metodo'] == 2) {
+    }elseif ($_POST[3]['metodo'] == 2) {
       echo 'Consumo Mensal';
     }else{
       echo "N/A";
     }
     ?>:</td>
-		<td>&nbsp;<?php echo $_GET['metodovalor'];?>kwh</td>
+		<td>&nbsp;<?php echo $_POST[4]['dim'];?>kwh</td>
 	</tr>
 	<tr>
 		<td>&nbsp;Padrão:</td>
 		<td>&nbsp;<?php 
-    if($_GET['padrao'] == 1){ 
+    if($_POST[5]['padrao'] == 1){ 
       echo 'Monofásico';
-    }elseif ($_GET['padrao'] == 2) {
+    }elseif ($_POST[5]['padrao'] == 2) {
       echo 'Bifásico';
-    }elseif ($_GET['padrao'] == 3) {
+    }elseif ($_POST[5]['padrao'] == 3) {
       echo 'Trifásico';
     }else{
       echo "N/A";
@@ -76,9 +71,9 @@ if (!empty($_GET['lat']) && isset($_GET['lat'])) {
     ?></td>
 		<td>&nbsp;Grupo de Cliente:</td>
 		<td>&nbsp;<?php 
-    if($_GET['grupo'] == 1){ 
+    if($_POST[6]['grupo'] == 1){ 
       echo 'Grupo A';
-    }elseif ($_GET['grupo'] == 2) {
+    }elseif ($_POST[6]['grupo'] == 2) {
       echo 'Grupo B';
     }else{
       echo "N/A";
@@ -88,9 +83,9 @@ if (!empty($_GET['lat']) && isset($_GET['lat'])) {
 	<tr>
 		<td>&nbsp;Tipo de Inversor escolhido:</td>
 		<td>&nbsp;<?php 
-    if($_GET['tipo'] == 1){ 
+    if($_POST[7]['tipo'] == 1){ 
       echo 'Inversor com Strings';
-    }elseif ($_GET['tipo'] == 2) {
+    }elseif ($_POST[7]['tipo'] == 2) {
       echo 'Micro-Inversor';
     }else{
       echo "N/A";
@@ -102,13 +97,17 @@ if (!empty($_GET['lat']) && isset($_GET['lat'])) {
 	<tr>
 		<td>Distancia de medição:</td>
 		<td>&nbsp;<?php echo $val['distance']; ?>km</td>
-		<td>média ao longo de um ano de horas de sol no dia:</td>
+    <td>ID: <?php echo $val['ID']; ?></td>
+		<td>Média ao longo de um ano de horas de sol no dia:</td>
 		<td>&nbsp;<?php echo $val['ANUAL']; ?>H</td>
 	</tr>
 	</tbody>
 </table>
-
-<?PHP } } ?>
+<?PHP 
+if(array_key_exists('ID', $val)){
+  $saida_n = $val['ID'];
+}
+} } ?>
 
 <div id="container"></div>
 
@@ -117,6 +116,9 @@ if (!empty($_GET['lat']) && isset($_GET['lat'])) {
     Highcharts.chart('container', {
   chart: {
     type: 'area'
+  },
+  tooltip: {
+                valueSuffix: 'kWh',
   },
   title: {
     text: 'Geração em KwH ao longo de um ano'
@@ -129,7 +131,22 @@ if (!empty($_GET['lat']) && isset($_GET['lat'])) {
   },
   series: [{
     name: 'Previsto',
-    data: [1293.75, 1298.25, 1253.25, 1093.5, 1167.75, 1176.75, 1226.25, 1325.25, 1361.25, 1417.5, 1426.5, 1336.5]
+
+    <?php if(!empty($saida_n)){
+      $stmt2 = $conn->prepare('SELECT tt.JAN, tt.FEV, tt.MAR, tt.ABR, tt.MAI, tt.JUN, tt.JUL, tt.AGO, tt.`SET`, tt.`OUT`, tt.NOV, tt.DEZ FROM sundata.solar AS tt WHERE id = :id;');
+
+      $stmt2->execute([ 'id' => $saida_n ]);
+      $saida = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+      $saida_f = $saida[0];
+      
+      echo 'data: [';
+      foreach($saida_f as $row  => $valor) {
+        echo $valor/1000  . ',';
+      }
+      echo ']';
+    }else{
+      echo 'data: [1293.75, 1298.25, 1253.25, 1093.5, 1167.75, 1176.75, 1226.25, 1325.25, 1361.25, 1417.5, 1426.5, 1336.5]';
+    } ?> 
   },{
     name: 'Geração Real',
     data: [1035, 1038.6, 1002.6, 874.8, 934.2, 941.4, 981, 1060.2, 1089, 1134, 1141.2, 1069.2]
