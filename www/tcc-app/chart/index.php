@@ -115,7 +115,7 @@ if(array_key_exists('ID', $val)){
 <script>
     Highcharts.chart('container', {
   chart: {
-    type: 'area'
+    type: 'column'
   },
   tooltip: {
                 valueSuffix: 'kWh',
@@ -123,8 +123,16 @@ if(array_key_exists('ID', $val)){
   title: {
     text: 'Geração em KwH ao longo de um ano'
   },
+  subtitle: {
+        text: 'Fonte: labren.ccst.inpe.br'
+  },
   xAxis: {
     categories: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+  },
+  yAxis: {
+        title: {
+            text: 'Geração em kWh'
+        }
   },
   credits: {
     enabled: false
@@ -141,7 +149,7 @@ if(array_key_exists('ID', $val)){
       
       echo 'data: [';
       foreach($saida_f as $row  => $valor) {
-        echo $valor/1000  . ',';
+        echo $valor  . ',';
       }
       echo ']';
     }else{
