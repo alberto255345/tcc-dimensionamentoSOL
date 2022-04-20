@@ -81,10 +81,8 @@ $('#campo-busca').autocomplete({
     source: function(request, response){
         $.ajax({
             url: 'http://api.positionstack.com/v1/forward',
-            type: 'get',
-            dataType: 'json',
-            data: {
-                'access_key': '5ee2a99a880c7ee935eccc63c1b80618', 
+            data: { 
+                'access_key': '93886b0349ce0ba7a5a904c2deb34d78', 
                 'query' : request.term
             }
         }).done(function(data){
